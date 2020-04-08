@@ -1,0 +1,34 @@
+{
+  "name": "setup-onescript",
+  "version": "0.0.0",
+  "private": true,
+  "description": "setup onescript action",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js",
+    "package": "ncc build index.js -o dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otymko/setup-onescript.git"
+  },
+  "keywords": [
+    "actions",
+    "onescript",
+    "setup"
+  ],
+  "author": "otymko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/otymko/setup-onescript/issues"
+  },
+  "homepage": "https://github.com/otymko/setup-onescriptk#readme",
+  "dependencies": {
+    "@actions/core": "^1.1.0",
+    "@actions/exec": "^1.0.1"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.20.5",
+    "eslint": "^6.3.0"
+  }
+}

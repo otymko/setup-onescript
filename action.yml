@@ -1,0 +1,9 @@
+name: 'Setup Onescript Action'
+description: 'Setup your runner with Onescript'
+author: 'otymko'
+inputs: 
+  version:
+    description: 'Version of Onescript to use'
+runs:
+  using: 'node12'
+  main: 'index.js'
