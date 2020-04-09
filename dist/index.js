@@ -961,7 +961,7 @@ async function run() {
       console.log('Установка');
       await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
       console.log('Лог установки')
-      await exec.exec('type oscript.log');
+      await exec.exec('powershell Get-Content -Path oscript.log');
       console.log('Удаление временного файла');
       await fs.unlinkSync('./oscript.exe');
     } else {
