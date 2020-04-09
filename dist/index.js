@@ -946,6 +946,7 @@ module.exports = require("os");
 
 const core = __webpack_require__(470);
 const exec = __webpack_require__(986);
+const fs = __webpack_require__(747);
 
 const patform = process.platform;
 
@@ -960,7 +961,7 @@ async function run() {
       console.log('Установка');
       await exec.exec('./oscript.exe /verysilent /norestart');
       console.log('Удаление временного файла');
-      // await exec.exec('del ./oscript.exe');
+      await fs.unlinkSync('./oscript.exe');
     } else {
       throw new Error('OS not support');
     }

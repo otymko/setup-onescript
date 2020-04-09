@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
+const fs = require('fs');
 
 const patform = process.platform;
 
@@ -14,7 +15,7 @@ async function run() {
       console.log('Установка');
       await exec.exec('./oscript.exe /verysilent /norestart');
       console.log('Удаление временного файла');
-      // await exec.exec('del ./oscript.exe');
+      await fs.unlinkSync('./oscript.exe');
     } else {
       throw new Error('OS not support');
     }
