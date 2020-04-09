@@ -7,12 +7,14 @@ jobs:
     runs-on: windows-latest
     name: oscript for win
     steps:
-    - uses: actions/checkout@v1
-    - uses: ./
-      with:
-        version: 1.3.0
+    # - uses: actions/checkout@v1
+    # - uses: ./
+    #   with:
+    #     version: 1.3.0
     # - run: "C:\Program Files (x86)/OneScript/bin/oscript.exe" test/fixtures/test.os
-    - run: oscript --version
+    - run: dir 'C:\Program Files (x86)\'
       shell: cmd
+    # - run: oscript --version
+    #   shell: cmd
     # - name: Проверка скрипта OS
     #   run: oscript test/fixtures/test.os
