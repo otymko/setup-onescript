@@ -7,11 +7,10 @@ jobs:
     runs-on: windows-latest
     name: oscript for win
     steps:
-      - run: powershell ping localhost -t
-    # - uses: actions/checkout@v1
-    # - uses: ./
-    #   with:
-    #     version: 1.3.0
+    - uses: actions/checkout@v1
+    - uses: ./
+      with:
+        version: 1.3.0
     # - run: where oscript
     # - name: Проверка скрипта OS
     #   run: oscript test/fixtures/test.os
