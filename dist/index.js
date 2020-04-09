@@ -960,7 +960,7 @@ async function run() {
       console.log('Установка');
       await exec.exec('./oscript.exe /verysilent /norestart');
       console.log('Удаление временного файла');
-      await exec.exec('del ./oscript.exe');
+      // await exec.exec('del ./oscript.exe');
     } else {
       throw new Error('OS not support');
     }

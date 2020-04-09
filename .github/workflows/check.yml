@@ -11,3 +11,5 @@ jobs:
     - uses: ./
       with:
         version: 1.3.0
+    - name: Проверка скрипта OS
+      run: oscript test/fixtures/test.os
