@@ -24,6 +24,8 @@ async function run() {
       PATH = OLD_PATH + "C:\Program Files\OneScript\bin;";
       core.exportVariable('Path', PATH);
 
+      console.log(PATH);
+
     } else {
       throw new Error('OS not support');
     }
