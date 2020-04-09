@@ -33,7 +33,7 @@ async function run() {
 }
 
 function getVersionString(value) {
-  var version = value.replace('.', '_');
+  var version = value.split('.').join('_');
   return version;
 }
 
