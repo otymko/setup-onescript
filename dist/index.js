@@ -971,7 +971,7 @@ async function run() {
 }
 
 function getVersionString(value) {
-  var version = osVersion.replace('.', '_');  
+  var version = value.replace('.', '_');  
   return version;
 }
 
