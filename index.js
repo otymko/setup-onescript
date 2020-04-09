@@ -29,10 +29,12 @@ async function run() {
       var tmpFile = tmp.fileSync();
       fs.writeFileSync(tmpFile.name, installLinux(osVersionStr, 'x64'));
 
+      await exec.exec('sudo chmod 777 -R /usr/share/oscript');
+
       await exec.exec('bash ' + tmpFile.name);
       fs.unlinkSync(tmpFile.name);
       await exec.exec('curl -v https://hub.oscript.io/download/opm/opm.ospx --output opm.ospx');
-      await exec.exec('sudo opm install -f opm.ospx');
+      await exec.exec('opm install -f opm.ospx');
       fs.unlinkSync('opm.ospx');
       
       await exec.exec('oscript --version');
