@@ -23,6 +23,11 @@ async function run() {
       console.log('Удаление временного файла');
       await fs.unlinkSync('./oscript.exe');
 
+    } else if (patform == 'linux') {
+
+      await exec.exec('bash scripts/install.sh ' + osVersionStr + ' x64')
+      await exec.exec('oscript --version')
+    
     } else {
       throw new Error('OS not support');
     }
