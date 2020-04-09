@@ -29,7 +29,7 @@ async function run() {
       await exec.exec('echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/mono-official.list')
       await exec.exec('sudo apt-get update')
       await exec.exec('sudo apt-get install mono-complete mono-devel')
-      await exec.exec('curl -v https://oscript.io/downloads/' + osVersionStr + '/exe?bitness=x64 --output os.deb')
+      await exec.exec('curl -v https://oscript.io/downloads/' + osVersionStr + '/deb?bitness=x64 --output os.deb')
       await exec.exec('sudo dpkg -i os.deb; sudo apt install -f')
       await exec.exec('oscript --version')
     
