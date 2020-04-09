@@ -967,7 +967,7 @@ async function run() {
 
 
       const OLD_PATH = process.env.PATH;
-      PATH = OLD_PATH + "C:\Program Files\OneScript\bin;";
+      PATH = OLD_PATH + "C:\/Program Files\/OneScript\/bin;";
       core.exportVariable('Path', PATH);
 
       console.log(PATH);
