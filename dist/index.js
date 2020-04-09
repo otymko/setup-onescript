@@ -959,7 +959,9 @@ async function run() {
       console.log('Загрузка');
       await exec.exec('curl -v https://oscript.io/downloads/1_3_0/exe?bitness=x86 --output oscript.exe');
       console.log('Установка');
-      await exec.exec('./oscript.exe /verysilent /norestart');
+      await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
+      console.log('Лог установки')
+      await exec.exec('type oscript.log');
       console.log('Удаление временного файла');
       await fs.unlinkSync('./oscript.exe');
     } else {
