@@ -1996,6 +1996,7 @@ async function run() {
 
       await exec.exec('bash ' + tmpFile.name);
       fs.unlinkSync(tmpFile.name);
+      await exec.exec('opm install opm');
       await exec.exec('oscript --version');
     
     } else {
