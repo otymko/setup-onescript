@@ -14,10 +14,16 @@ async function run() {
       await exec.exec('curl -v https://oscript.io/downloads/1_3_0/exe?bitness=x86 --output oscript.exe');
       console.log('Установка');
       await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
-      console.log('Лог установки')
-      await exec.exec('powershell Get-Content -Path oscript.log');
+      // console.log('Лог установки')
+      // await exec.exec('powershell Get-Content -Path oscript.log');
       console.log('Удаление временного файла');
       await fs.unlinkSync('./oscript.exe');
+
+
+      const OLD_PATH = process.env.PATH;
+      PATH = OLD_PATH + "C:\Program Files (x86)\OneScript\bin;";
+      core.exportVariable('Path', PATH);
+
     } else {
       throw new Error('OS not support');
     }
@@ -28,7 +34,7 @@ async function run() {
 }
 
 function getVersionString(value) {
-  var version = value.replace('.', '_');  
+  var version = value.replace('.', '_');
   return version;
 }
 
