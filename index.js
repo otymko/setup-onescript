@@ -30,6 +30,7 @@ async function run() {
       await exec.exec('sudo apt-get update')
       await exec.exec('sudo apt-get install mono-complete mono-devel')
       await exec.exec('curl -v https://oscript.io/downloads/' + osVersionStr + '/deb?bitness=x64 --output os.deb')
+      await exec.exec('sudo chmod 777 os.deb')
       await exec.exec('sudo dpkg -i os.deb; sudo apt install -f')
       await exec.exec('oscript --version')
     
