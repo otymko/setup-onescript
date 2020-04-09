@@ -5,8 +5,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    name: Create app image
+    name: oscript for win
     steps:
-    - uses: otymko/setup-onescript@v1
+    - uses: ./
       with:
         version: 1.3.0

@@ -5,8 +5,8 @@ const patform = process.platform;
 
 async function run() {
   try {
-    const osVersion = core.getInput('version');
-    var osVersionStr = getVersionString(osVersion);
+    // const osVersion = core.getInput('version');
+    // var osVersionStr = getVersionString(osVersion);
     console.log('Версия: ' + osVersionStr);
     if (patform == 'win32') {
       console.log('Загрузка');
