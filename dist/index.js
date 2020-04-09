@@ -1999,6 +1999,7 @@ async function run() {
       await exec.exec('curl -v https://hub.oscript.io/download/opm/opm.ospx --output opm.ospx');
       await exec.exec('sudo opm install -f opm.ospx');
       fs.unlinkSync('opm.ospx');
+      
       await exec.exec('oscript --version');
     
     } else {
