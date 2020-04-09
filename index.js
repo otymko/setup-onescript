@@ -11,7 +11,7 @@ async function run() {
     console.log('Версия: ' + osVersionStr);
     if (patform == 'win32') {
       console.log('Загрузка');
-      await exec.exec('curl -v https://oscript.io/downloads/1_3_0/exe?bitness=x86 --output oscript.exe');
+      await exec.exec('curl -v https://oscript.io/downloads/1_3_0/exe?bitness=x64 --output oscript.exe');
       console.log('Установка');
       await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
       // console.log('Лог установки')
@@ -21,7 +21,7 @@ async function run() {
 
 
       const OLD_PATH = process.env.PATH;
-      PATH = OLD_PATH + "C:\Program Files (x86)\OneScript\bin;";
+      PATH = OLD_PATH + "C:\Program Files\OneScript\bin;";
       core.exportVariable('Path', PATH);
 
     } else {
