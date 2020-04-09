@@ -11,7 +11,7 @@ async function run() {
     console.log('Версия: ' + osVersionStr);
     if (patform == 'win32') {
       console.log('Загрузка');
-      await exec.exec('curl -v https://oscript.io/downloads/1_3_0/exe?bitness=x64 --output oscript.exe');
+      await exec.exec('curl -v https://oscript.io/downloads/' + osVersionStr + '/exe?bitness=x64 --output oscript.exe');
       console.log('Установка');
       await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
 
