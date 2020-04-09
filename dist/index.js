@@ -1997,7 +1997,7 @@ async function run() {
       await exec.exec('bash ' + tmpFile.name);
       fs.unlinkSync(tmpFile.name);
 
-      await exec.exec('sudo chmod 777 -R /usr/share/oscript');
+      await exec.exec('sudo chmod -R ugo+rwx /usr/share/oscript');
 
       await exec.exec('curl -v https://hub.oscript.io/download/opm/opm.ospx --output opm.ospx');
       await exec.exec('opm install -f opm.ospx');
