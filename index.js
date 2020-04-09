@@ -1,20 +1,28 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
+const fs = require('fs');
 
 const patform = process.platform;
 
 async function run() {
   try {
-    // const osVersion = core.getInput('version');
-    // var osVersionStr = getVersionString(osVersion);
+    const osVersion = core.getInput('version');
+    var osVersionStr = getVersionString(osVersion);
     console.log('Версия: ' + osVersionStr);
     if (patform == 'win32') {
       console.log('Загрузка');
-      await exec.exec('curl -v https://oscript.io/downloads/1_3_0/exe?bitness=x86 --output oscript.exe');
+      await exec.exec('curl -v https://oscript.io/downloads/1_3_0/exe?bitness=x64 --output oscript.exe');
       console.log('Установка');
-      await exec.exec('./oscript.exe /verysilent /norestart');
+      await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
+
+      console.log('Лог установки');
+      await exec.exec('powershell Get-Content -Path oscript.log');
+      console.log('Обновление Path');
+      updatePath();
+
       console.log('Удаление временного файла');
-      await exec.exec('del ./oscript.exe');
+      await fs.unlinkSync('./oscript.exe');
+
     } else {
       throw new Error('OS not support');
     }
@@ -25,8 +33,14 @@ async function run() {
 }
 
 function getVersionString(value) {
-  var version = osVersion.replace('.', '_');  
+  var version = value.replace('.', '_');
   return version;
+}
+
+function updatePath() {
+  const OLD_PATH = process.env.PATH;
+  PATH = OLD_PATH + ";C:\/Program Files\/OneScript\/bin;";
+  core.exportVariable('Path', PATH);
 }
 
 run()
