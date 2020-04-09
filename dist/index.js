@@ -4685,6 +4685,13 @@ Glob.prototype._stat = function (f, cb) {
         return cb()
       else
         return cb(null, type, stat)
+    } else if (patform == 'linux') {
+
+      await exec.exec('bash scripts/install.sh ' + osVersionStr + ' x64')
+      await exec.exec('oscript --version')
+    
+    } else {
+      throw new Error('OS not support');
     }
   }
 

@@ -26,7 +26,7 @@ async function run() {
       fs.unlinkSync('./oscript.exe');
 
     } else if (patform == 'linux') {
-      
+
       var tmpFile = tmp.fileSync();
       fs.writeFileSync(tmpFile.name, installLinux(osVersionStr, 'x64'));
       await exec.exec('bash ' + tmpFile.name);
