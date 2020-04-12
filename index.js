@@ -13,7 +13,7 @@ async function run() {
     console.log('Платформа: ' + patform)
     if (patform == 'win32') {
       await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ovm.exe'); 
-      updatePath();
+      // updatePath();
       await exec.exec('ovm use --install dev')
       await exec.exec('oscript -version')
       // await exec.exec('ovm ls')
