@@ -1972,32 +1972,32 @@ const patform = process.platform;
 
 async function run() {
   try {
-    const osVersion = core.getInput('version');
+    // const osVersion = core.getInput('version');
+    const osVersion = '1.3.0';
     var osVersionStr = getVersionString(osVersion);
     console.log('Версия: ' + osVersionStr);
     console.log('Платформа: ' + patform)
     if (patform == 'win32') {
-      await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ovm.exe'); 
-      // updatePath();
-      await exec.exec('./ovm.exe install dev');
-      await exec.exec('./ovm.exe use dev');
-      await exec.exec('oscript -v');
-
       
-      // await exec.exec('ovm ls')
+      await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ovm.exe'); 
+      await exec.exec('./ovm.exe install ' + osVersion);
+      await exec.exec('./ovm.exe use ' + osVersion);
+      let output = '';
+        const options = {};
+        options.listeners = {
+          stdout: (data) => {
+            output += data.toString();
+          }
+        };
+      await exec.exec('./ovm.exe',['which', osVersion], options);
+      let pathOscript = getOscriptPath(output);
 
-      // console.log('Загрузка');
-      // await exec.exec('curl -v https://oscript.io/downloads/' + osVersionStr + '/exe?bitness=x64 --output oscript.exe');
-      // console.log('Установка');
-      // await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
+      updateEnvPath(pathOscript);
 
-      // console.log('Лог установки');
-      // await exec.exec('powershell Get-Content -Path oscript.log');
-      // console.log('Обновление Path');
-      // updatePath();
+      console.log('Удаление временного файла');
+      fs.unlinkSync('./ovm.exe');
 
-      // console.log('Удаление временного файла');
-      // fs.unlinkSync('./oscript.exe');
+      await exec.exec('oscript -v');
 
     } else if (patform == 'linux') {
       var tmpFile = tmp.fileSync();
@@ -2011,9 +2011,9 @@ async function run() {
       await exec.exec('curl -v https://hub.oscript.io/download/opm/opm.ospx --output opm.ospx');
       await exec.exec('sudo opm install -f opm.ospx');
       fs.unlinkSync('opm.ospx');
-      
+
       await exec.exec('oscript --version');
-    
+
     } else {
       throw new Error('OS not support');
     }
@@ -2021,6 +2021,46 @@ async function run() {
   catch (error) {
     core.setFailed(error.message);
   }
+}
+
+function updateEnvPath(value) {
+  let PATH = value + ";" + process.env.PATH;
+  core.exportVariable('Path', PATH); 
+}
+
+function getOptionsRun(out) {
+  const options = {};
+        options.listeners = {
+          stdout: (data) => {
+            out += data.toString();
+          }
+        };
+  return options; 
+}
+
+function getOscriptPath(out) {
+  return __webpack_require__(622).dirname(out);
+}
+
+// function getOscriptFile(version) {
+//   getOscriptFile(osVersion);
+
+//   let myOutput = '';
+//   const options = {};
+//   options.listeners = {
+//     stdout: (data) => {
+//       myOutput += data.toString();
+//     }
+//   };
+//   runOVM(version, options);
+//   // await exec.exec('./ovm.exe',['which', version], options);
+//   return myOutput;
+
+//   // console.log('PATH: ' + myOutput);
+// }
+
+async function runOVM(version, options) {
+  await exec.exec('./ovm.exe',['which', version], options);  
 }
 
 function getVersionString(value) {
@@ -2040,16 +2080,16 @@ function updatePath() {
 }
 
 function installLinux(version, bitness) {
- var value = [];
- value.push('#!/bin/bash');
- value.push('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF');
- value.push('echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/mono-official.list');
- value.push('sudo apt-get update');
- value.push('sudo apt-get install mono-complete mono-devel');
- value.push('curl -v https://oscript.io/downloads/' + version + '/deb?bitness=' + bitness + ' --output os.deb');
- value.push('sudo dpkg -i os.deb');
- value.push('sudo apt install -f');
- return value.join('\n');
+  var value = [];
+  value.push('#!/bin/bash');
+  value.push('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF');
+  value.push('echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/mono-official.list');
+  value.push('sudo apt-get update');
+  value.push('sudo apt-get install mono-complete mono-devel');
+  value.push('curl -v https://oscript.io/downloads/' + version + '/deb?bitness=' + bitness + ' --output os.deb');
+  value.push('sudo dpkg -i os.deb');
+  value.push('sudo apt install -f');
+  return value.join('\n');
 }
 
 run()
