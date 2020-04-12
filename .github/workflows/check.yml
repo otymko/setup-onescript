@@ -15,5 +15,5 @@ jobs:
     - uses: ./
       with:
         version: ${{ matrix.oscript_version }}
-    - name: Проверка скрипта OS
-      run: oscript test/fixtures/test.os
+    # - name: Проверка скрипта OS
+    #   run: oscript test/fixtures/test.os
