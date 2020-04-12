@@ -12,11 +12,37 @@ async function run() {
     var osVersionStr = getVersionString(osVersion);
     console.log('Версия: ' + osVersionStr);
     console.log('Платформа: ' + patform)
+
+    let prefix = '';
+
     if (patform == 'win32') {
       
       await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ovm.exe'); 
-      await exec.exec('./ovm.exe install ' + osVersion);
-      await exec.exec('./ovm.exe use ' + osVersion);
+
+    } else if (patform == 'linux') {
+
+      prefix = 'mono ';
+      
+      var tmpFile = tmp.fileSync();
+      fs.writeFileSync(tmpFile.name, installLinux(osVersionStr, 'x64'));
+
+      await exec.exec('bash ' + tmpFile.name);
+      fs.unlinkSync(tmpFile.name);
+
+      // await exec.exec('sudo chmod -R ugo+rwx /usr/share/oscript');
+
+      // await exec.exec('curl -v https://hub.oscript.io/download/opm/opm.ospx --output opm.ospx');
+      // await exec.exec('sudo opm install -f opm.ospx');
+      // fs.unlinkSync('opm.ospx');
+
+      // await exec.exec('oscript --version');
+
+    } else {
+      throw new Error('OS not support');
+    }
+
+    await exec.exec(prefix + './ovm.exe install ' + osVersion);
+      await exec.exec(prefix + './ovm.exe use ' + osVersion);
       let output = '';
         const options = {};
         options.listeners = {
@@ -24,34 +50,14 @@ async function run() {
             output += data.toString();
           }
         };
-      await exec.exec('./ovm.exe',['which', osVersion], options);
+      await exec.exec(prefix + './ovm.exe',['which', osVersion], options);
       let pathOscript = getOscriptPath(output);
 
       updateEnvPath(pathOscript);
 
-      console.log('Удаление временного файла');
+      console.debug('Удаление временного файла');
       fs.unlinkSync('./ovm.exe');
 
-      await exec.exec('oscript -v');
-
-    } else if (patform == 'linux') {
-      var tmpFile = tmp.fileSync();
-      fs.writeFileSync(tmpFile.name, installLinux(osVersionStr, 'x64'));
-
-      await exec.exec('bash ' + tmpFile.name);
-      fs.unlinkSync(tmpFile.name);
-
-      await exec.exec('sudo chmod -R ugo+rwx /usr/share/oscript');
-
-      await exec.exec('curl -v https://hub.oscript.io/download/opm/opm.ospx --output opm.ospx');
-      await exec.exec('sudo opm install -f opm.ospx');
-      fs.unlinkSync('opm.ospx');
-
-      await exec.exec('oscript --version');
-
-    } else {
-      throw new Error('OS not support');
-    }
   }
   catch (error) {
     core.setFailed(error.message);
@@ -121,9 +127,9 @@ function installLinux(version, bitness) {
   value.push('echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/mono-official.list');
   value.push('sudo apt-get update');
   value.push('sudo apt-get install mono-complete mono-devel');
-  value.push('curl -v https://oscript.io/downloads/' + version + '/deb?bitness=' + bitness + ' --output os.deb');
-  value.push('sudo dpkg -i os.deb');
-  value.push('sudo apt install -f');
+  // value.push('curl -v https://oscript.io/downloads/' + version + '/deb?bitness=' + bitness + ' --output os.deb');
+  // value.push('sudo dpkg -i os.deb');
+  // value.push('sudo apt install -f');
   return value.join('\n');
 }
 
