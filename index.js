@@ -12,18 +12,24 @@ async function run() {
     console.log('Версия: ' + osVersionStr);
     console.log('Платформа: ' + patform)
     if (patform == 'win32') {
-      console.log('Загрузка');
-      await exec.exec('curl -v https://oscript.io/downloads/' + osVersionStr + '/exe?bitness=x64 --output oscript.exe');
-      console.log('Установка');
-      await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
-
-      console.log('Лог установки');
-      await exec.exec('powershell Get-Content -Path oscript.log');
-      console.log('Обновление Path');
+      await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ovm.exe'); 
       updatePath();
+      await exec.exec('ovm use --install dev')
+      await exec.exec('oscript -version')
+      // await exec.exec('ovm ls')
 
-      console.log('Удаление временного файла');
-      fs.unlinkSync('./oscript.exe');
+      // console.log('Загрузка');
+      // await exec.exec('curl -v https://oscript.io/downloads/' + osVersionStr + '/exe?bitness=x64 --output oscript.exe');
+      // console.log('Установка');
+      // await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
+
+      // console.log('Лог установки');
+      // await exec.exec('powershell Get-Content -Path oscript.log');
+      // console.log('Обновление Path');
+      // updatePath();
+
+      // console.log('Удаление временного файла');
+      // fs.unlinkSync('./oscript.exe');
 
     } else if (patform == 'linux') {
       var tmpFile = tmp.fileSync();
@@ -55,9 +61,14 @@ function getVersionString(value) {
 }
 
 function updatePath() {
+
   const OLD_PATH = process.env.PATH;
-  PATH = OLD_PATH + ";C:\/Program Files\/OneScript\/bin;";
+  // PATH = OLD_PATH + ";C:\/Program Files\/OneScript\/bin;";
+  let thisCat = require('path').dirname(require.main.filename);
+  console.log('Каталог ' + thisCat);
+  let PATH = OLD_PATH + ";" + thisCat + ";";
   core.exportVariable('Path', PATH);
+
 }
 
 function installLinux(version, bitness) {
