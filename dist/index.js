@@ -2005,7 +2005,7 @@ async function run() {
       // await exec.exec('sudo opm install -f opm.ospx');
       // fs.unlinkSync('opm.ospx');
 
-      // await exec.exec('oscript --version');
+      await exec.exec('oscript --version');
 
     } else {
       throw new Error('OS not support');
