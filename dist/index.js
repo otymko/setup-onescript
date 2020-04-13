@@ -1980,9 +1980,11 @@ async function run() {
 
     let prefix = '';
 
+    await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ovm.exe'); 
+
     if (patform == 'win32') {
       
-      await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ovm.exe'); 
+      // await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ovm.exe'); 
 
     } else if (patform == 'linux') {
 
@@ -2006,8 +2008,8 @@ async function run() {
       throw new Error('OS not support');
     }
 
-    await exec.exec(prefix + 'ovm.exe install ' + osVersion);
-      await exec.exec(prefix + 'ovm.exe use ' + osVersion);
+    await exec.exec(prefix + './ovm.exe install ' + osVersion);
+      await exec.exec(prefix + './ovm.exe use ' + osVersion);
       let output = '';
         const options = {};
         options.listeners = {
@@ -2015,13 +2017,13 @@ async function run() {
             output += data.toString();
           }
         };
-      await exec.exec(prefix + 'ovm.exe',['which', osVersion], options);
+      await exec.exec(prefix + './ovm.exe',['which', osVersion], options);
       let pathOscript = getOscriptPath(output);
 
       updateEnvPath(pathOscript);
 
       console.debug('Удаление временного файла');
-      fs.unlinkSync('ovm.exe');
+      fs.unlinkSync('./ovm.exe');
 
   }
   catch (error) {
