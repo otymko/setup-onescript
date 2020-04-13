@@ -2025,6 +2025,8 @@ async function run() {
       console.debug('Удаление временного файла');
       fs.unlinkSync('./ovm.exe');
 
+      await exec.exec('opm install opm');
+
   }
   catch (error) {
     core.setFailed(error.message);
