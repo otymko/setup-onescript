@@ -65,8 +65,8 @@ async function run() {
       console.debug('Удаление временного файла');
       fs.unlinkSync('./ovm.exe');
 
-      await exec.exec('which oscript');
-      
+      // await exec.exec('which oscript');
+
       await exec.exec('oscript --version');
 
       // await exec.exec('opm install opm');
