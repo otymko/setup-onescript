@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         oscript_version: [dev]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     name: check oscript
     steps:
     - uses: actions/checkout@v1

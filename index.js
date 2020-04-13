@@ -41,8 +41,8 @@ async function run() {
       throw new Error('OS not support');
     }
 
-    await exec.exec(prefix + './ovm.exe install ' + osVersion);
-      await exec.exec(prefix + './ovm.exe use ' + osVersion);
+    await exec.exec(prefix + 'ovm.exe install ' + osVersion);
+      await exec.exec(prefix + 'ovm.exe use ' + osVersion);
       let output = '';
         const options = {};
         options.listeners = {
@@ -50,13 +50,13 @@ async function run() {
             output += data.toString();
           }
         };
-      await exec.exec(prefix + './ovm.exe',['which', osVersion], options);
+      await exec.exec(prefix + 'ovm.exe',['which', osVersion], options);
       let pathOscript = getOscriptPath(output);
 
       updateEnvPath(pathOscript);
 
       console.debug('Удаление временного файла');
-      fs.unlinkSync('./ovm.exe');
+      fs.unlinkSync('ovm.exe');
 
   }
   catch (error) {
