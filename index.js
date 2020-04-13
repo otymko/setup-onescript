@@ -11,7 +11,10 @@ async function run() {
     const osVersion = '1.3.0';
     var osVersionStr = getVersionString(osVersion);
     console.log('Версия: ' + osVersionStr);
-    console.log('Платформа: ' + patform)
+    console.log('Платформа: ' + patform);
+
+    // LOGOS_CONFIG=logger.rootLogger=DEBUG
+    core.exportVariable('LOGOS_CONFIG', "logger.rootLogger=DEBUG");
 
     let prefix = '';
 
