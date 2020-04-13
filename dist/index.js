@@ -1979,7 +1979,7 @@ async function run() {
     console.log('Платформа: ' + patform);
 
     // LOGOS_CONFIG=logger.rootLogger=DEBUG
-    core.exportVariable('LOGOS_CONFIG', "logger.rootLogger=DEBUG");
+    // core.exportVariable('LOGOS_CONFIG', "logger.rootLogger=DEBUG");
 
     let prefix = '';
 
