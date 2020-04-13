@@ -52,7 +52,7 @@ async function run() {
             output += data.toString();
           }
         };
-      await exec.exec(prefix + './ovm.exe',['which', osVersion], options);
+      await exec.exec(prefix + './ovm.exe',['which', 'current'], options);
       let pathOscript = getOscriptPath(output);
 
       updateEnvPath(pathOscript);
@@ -60,7 +60,7 @@ async function run() {
       console.debug('Удаление временного файла');
       fs.unlinkSync('./ovm.exe');
 
-      await exec.exec('opm install opm');
+      // await exec.exec('opm install opm');
 
   }
   catch (error) {
