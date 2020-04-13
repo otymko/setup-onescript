@@ -11,10 +11,12 @@ jobs:
         os: [ubuntu-latest]
     name: check oscript
     steps:
+    
     - uses: actions/checkout@v1
+    
     - uses: ./
       with:
         version: ${{ matrix.oscript_version }}
     # - name: Проверка скрипта OS
     #   run: oscript test/fixtures/test.os
-    - run: oscript -version
+    # - run: oscript -version
