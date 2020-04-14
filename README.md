@@ -1,6 +1,6 @@
 # Setup-Onescript
 
-Setup-Onescript позволяет использовать в действия Github Action [Onescript](https://oscript.io/). При установке используется другой проект [OVM](https://github.com/oscript-library/ovm) - OneScript Version Manager.
+Setup-Onescript позволяет использовать в действиях Github Action [Onescript](https://oscript.io/). При установке используется другой проект [OVM](https://github.com/oscript-library/ovm) - OneScript Version Manager.
 
 ## Использование
 
