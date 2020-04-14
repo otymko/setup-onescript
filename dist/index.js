@@ -1967,43 +1967,82 @@ const core = __webpack_require__(470);
 const exec = __webpack_require__(986);
 const fs = __webpack_require__(747);
 const tmp = __webpack_require__(150);
+const path = __webpack_require__(622);
+const io = __webpack_require__(1);
 
-const patform = process.platform;
+const platform = process.platform;
 
 async function run() {
   try {
+
     const osVersion = core.getInput('version');
-    var osVersionStr = getVersionString(osVersion);
-    console.log('Версия: ' + osVersionStr);
-    console.log('Платформа: ' + patform)
-    if (patform == 'win32') {
-      console.log('Загрузка');
-      await exec.exec('curl -v https://oscript.io/downloads/' + osVersionStr + '/exe?bitness=x64 --output oscript.exe');
-      console.log('Установка');
-      await exec.exec('./oscript.exe /verysilent /norestart /log=oscript.log');
 
-      console.log('Лог установки');
-      await exec.exec('powershell Get-Content -Path oscript.log');
-      console.log('Обновление Path');
-      updatePath();
+    console.log('OS: ' + platform);
 
-      console.log('Удаление временного файла');
-      fs.unlinkSync('./oscript.exe');
+    if (!(platform == 'win32' || platform == 'linux' || platform == 'darwin')) {
+      throw new Error('OS not support');  
+    }
 
-    } else if (patform == 'linux') {
+    if (core.isDebug()) {
+      core.exportVariable('LOGOS_CONFIG', "logger.rootLogger=DEBUG");  
+    }
+
+    let pathToOVM = 'ovm.exe';
+    if (platform == 'win32') {
+      pathToOVM = path.dirname(__dirname) + '/' + 'ovm.exe';
+    }
+    await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ' + pathToOVM);
+
+    if (platform == 'win32') {
+      let pathToOVM = path.dirname(__dirname);
+      console.log("dir: " + pathToOVM);
+      core.addPath(pathToOVM);
+    }
+
+    if (platform == 'linux') {
+
       var tmpFile = tmp.fileSync();
-      fs.writeFileSync(tmpFile.name, installLinux(osVersionStr, 'x64'));
-
+      fs.writeFileSync(tmpFile.name, installLinux());
       await exec.exec('bash ' + tmpFile.name);
       fs.unlinkSync(tmpFile.name);
-      await exec.exec('curl -v https://hub.oscript.io/download/opm/opm.ospx --output opm.ospx');
-      await exec.exec('sudo opm install -f opm.ospx');
-      fs.unlinkSync('opm.ospx');
-      
-      await exec.exec('oscript --version');
+
+    }
+
+    if (platform == 'darwin') {
+      var tmpFile = tmp.fileSync();
+      fs.writeFileSync(tmpFile.name, installMacOs());
+      await exec.exec('bash ' + tmpFile.name);
+      fs.unlinkSync(tmpFile.name);
+    }
+
+    await exec.exec('ovm install ' + osVersion);
+    await exec.exec('ovm use ' + osVersion);
+
+    let output = '';
+    const options = {};
+    options.listeners = {
+      stdout: (data) => {
+        output += data.toString();
+      }
+    };
+    await exec.exec('ovm', ['which', 'current'], options);
+    let pathOscript = path.dirname(output);
+
+    core.addPath(pathOscript);
+
+    if (platform != 'win32') {
+      core.exportVariable('OSCRIPTBIN', pathOscript);
+      core.exportVariable('PATH', '$OSCRIPTBIN:' + process.env.PATH);
+    }
     
-    } else {
-      throw new Error('OS not support');
+    if (platform == 'linux') {
+      await exec.exec('curl -L https://github.com/oscript-library/opm/releases/download/v0.16.2/opm-0.16.2.ospx --output opm.ospx');
+      if (osVersion == '1.2.0') {
+        await exec.exec('mkdir tmp');
+        await exec.exec('unzip opm.ospx -d tmp');
+        await exec.exec('unzip -o ./tmp/content.zip -d /home/runner/.local/share/ovm/current/lib/opm');  
+      } 
+      await exec.exec('opm install -f opm.ospx');   
     }
   }
   catch (error) {
@@ -2011,28 +2050,30 @@ async function run() {
   }
 }
 
-function getVersionString(value) {
-  var version = value.split('.').join('_');
-  return version;
+function installLinux() {
+  var value = [];
+  value.push('#!/bin/bash');
+  value.push('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF');
+  value.push('echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/mono-official.list');
+  value.push('sudo apt-get update');
+  value.push('sudo apt-get install mono-complete mono-devel');
+  value.push('sudo mv ovm.exe /usr/local/bin/');
+
+  let cmd = 'mono /usr/local/bin/ovm.exe "$@"'; 
+  value.push("echo '" + cmd + "' | sudo tee /usr/local/bin/ovm");
+
+  value.push('sudo chmod +x /usr/local/bin/ovm');
+  return value.join('\n');
 }
 
-function updatePath() {
-  const OLD_PATH = process.env.PATH;
-  PATH = OLD_PATH + ";C:\/Program Files\/OneScript\/bin;";
-  core.exportVariable('Path', PATH);
-}
-
-function installLinux(version, bitness) {
- var value = [];
- value.push('#!/bin/bash');
- value.push('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF');
- value.push('echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/mono-official.list');
- value.push('sudo apt-get update');
- value.push('sudo apt-get install mono-complete mono-devel');
- value.push('curl -v https://oscript.io/downloads/' + version + '/deb?bitness=' + bitness + ' --output os.deb');
- value.push('sudo dpkg -i os.deb');
- value.push('sudo apt install -f');
- return value.join('\n');
+function installMacOs() {
+  var value = [];
+  value.push('#!/bin/bash'); 
+  value.push('mv ovm.exe /usr/local/bin/');
+  let cmd = 'mono /usr/local/bin/ovm.exe "$@"'; 
+  value.push("echo '" + cmd + "' | tee /usr/local/bin/ovm");
+  value.push('sudo chmod +x /usr/local/bin/ovm');
+  return value.join('\n');
 }
 
 run()
