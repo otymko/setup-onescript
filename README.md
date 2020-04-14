@@ -44,7 +44,8 @@ jobs:
 
 ### Пример использования
 
-Этот Action используется в проекте [GitRules](https://github.com/otymko/gitrules). В этом проекте реализован workflow для тестирования.
+Этот Action используется в проекте [GitRules](https://github.com/otymko/gitrules). В этом проекте реализован workflow для тестирования. 
+Более подробно посмотреть можно в [workflows](https://github.com/otymko/gitrules/tree/develop/.github/workflows).
 
 # Лицензия
 
