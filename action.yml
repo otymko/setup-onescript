@@ -1,5 +1,8 @@
 name: 'Setup Onescript Action'
 description: 'Setup your runner with Onescript'
+branding:
+  icon: 'chevrons-down'
+  color: 'blue'
 author: 'otymko'
 inputs: 
   version:
