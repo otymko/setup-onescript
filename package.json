@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/otymko/setup-onescriptk#readme",
   "dependencies": {
-    "@actions/core": "^1.1.0",
+    "@actions/core": "^1.2.6",
     "@actions/exec": "^1.0.1",
     "tmp": "^0.1.0"
   },
