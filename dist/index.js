@@ -2315,11 +2315,11 @@ async function run() {
 
         if (platform == 'linux') {
             await exec.exec('curl -L https://hub.oscript.io/download/opm/opm-1.0.7.ospx --output opm.ospx');
-            //if (osVersion == '1.2.0') {
+            if (osVersion == '1.2.0') {
                 await exec.exec('mkdir tmp');
                 await exec.exec('unzip opm.ospx -d tmp');
                 await exec.exec('unzip -o ./tmp/content.zip -d /home/runner/.local/share/ovm/current/lib/opm');
-            //}
+            }
             await exec.exec('opm install -f opm.ospx');
         }
     } catch (error) {
