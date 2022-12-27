@@ -26,7 +26,7 @@ async function run() {
         if (platform == 'win32') {
             pathToOVM = path.dirname(__dirname) + '/' + 'ovm.exe';
         }
-        await exec.exec('curl -L https://github.com/otymko/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ' + pathToOVM);
+        await exec.exec('curl -L https://github.com/otymko/ovm/releases/download/v1.0.0-RC15/ovm2.exe --output ' + pathToOVM);
 
         if (platform == 'win32') {
             let pathToOVM = path.dirname(__dirname);
