@@ -71,7 +71,7 @@ async function run() {
         }
 
         if (platform == 'linux') {
-            await exec.exec('curl -L https://github.com/oscript-library/opm/releases/download/v0.16.2/opm-0.16.2.ospx --output opm.ospx');
+            await exec.exec('curl -L https://hub.oscript.io/download/opm/opm-1.0.7.ospx --output opm.ospx');
             if (osVersion == '1.2.0') {
                 await exec.exec('mkdir tmp');
                 await exec.exec('unzip opm.ospx -d tmp');
