@@ -2269,7 +2269,7 @@ async function run() {
         if (platform == 'win32') {
             pathToOVM = path.dirname(__dirname) + '/' + 'ovm.exe';
         }
-        await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC15/ovm.exe --output ' + pathToOVM);
+        await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.0.0-RC17/ovm.exe --output ' + pathToOVM);
 
         if (platform == 'win32') {
             let pathToOVM = path.dirname(__dirname);
@@ -2354,6 +2354,7 @@ function installMacOs() {
 }
 
 run()
+
 
 /***/ }),
 
