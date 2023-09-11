@@ -6,7 +6,7 @@ branding:
 author: 'otymko'
 inputs: 
   version:
-    description: 'Version of Onescript to use. Support value: 1.0.21, 1.2.0, 1.3.0, dev'
+    description: 'Version of Onescript to use. Support value: 1.3.0, 1.5.0, 1.8.1, dev'
 runs:
   using: 'node12'
   main: 'dist/index.js'
