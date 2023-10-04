@@ -8657,6 +8657,7 @@ async function run() {
     try {
 
         const osVersion = core.getInput('version');
+        const ovmVersion = core.getInput('ovm_version');
 
         console.log('OS: ' + platform);
 
@@ -8672,7 +8673,12 @@ async function run() {
         if (platform == 'win32') {
             pathToOVM = path.dirname(__dirname) + '/' + 'ovm.exe';
         }
-        await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v1.2.0/ovm.exe --output ' + pathToOVM);
+
+        if (ovmVersion == 'latest') {
+            await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/latest/download/ovm.exe --output ' + pathToOVM);
+        } else {
+            await exec.exec('curl -L https://github.com/oscript-library/ovm/releases/download/v'+ ovmVersion + '/ovm.exe --output ' + pathToOVM);
+        }
 
         if (platform == 'win32') {
             let pathToOVM = path.dirname(__dirname);
@@ -8703,7 +8709,9 @@ async function run() {
         const options = {};
         options.listeners = {
             stdout: (data) => {
-                output += data.toString();
+                if (data.toString().includes('ovm')) {
+                    output += data.toString();
+                }
             }
         };
         await exec.exec('ovm', ['which', 'current'], options);
