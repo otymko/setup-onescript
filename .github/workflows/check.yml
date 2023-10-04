@@ -10,12 +10,14 @@ jobs:
       matrix:
         oscript_version: [lts, stable, dev]
         os: [macOS-latest, ubuntu-latest, windows-latest]
+        ovm_version: ['1.2.1', latest]
     name: check oscript
-    steps: 
+    steps:
     - uses: actions/checkout@v2 
     - uses: ./
       with:
         version: ${{ matrix.oscript_version }}
+        ovm_version: ${{ matrix.ovm_version }}
     - name: Проверка скрипта OS
       run: oscript test/fixtures/test.os
     - name: Проверка установки coverage
