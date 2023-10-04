@@ -8703,7 +8703,9 @@ async function run() {
         const options = {};
         options.listeners = {
             stdout: (data) => {
-                output += data.toString();
+                if (data.toString().includes('ovm')) {
+                    output += data.toString();
+                }
             }
         };
         await exec.exec('ovm', ['which', 'current'], options);
