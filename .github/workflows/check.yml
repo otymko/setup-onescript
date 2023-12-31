@@ -13,7 +13,7 @@ jobs:
         ovm_version: ['1.2.1', latest]
     name: check oscript
     steps:
-    - uses: actions/checkout@v2 
+    - uses: actions/checkout@v4
     - uses: ./
       with:
         version: ${{ matrix.oscript_version }}
