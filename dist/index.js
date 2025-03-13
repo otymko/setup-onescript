@@ -8687,23 +8687,22 @@ async function run() {
         }
 
         if (platform == 'linux') {
-
-            var tmpFile = tmp.fileSync();
-            fs.writeFileSync(tmpFile.name, installLinux());
-            await exec.exec('bash ' + tmpFile.name);
-            fs.unlinkSync(tmpFile.name);
-
+            await installLinux();
         }
 
         if (platform == 'darwin') {
-            var tmpFile = tmp.fileSync();
-            fs.writeFileSync(tmpFile.name, installMacOs());
-            await exec.exec('bash ' + tmpFile.name);
-            fs.unlinkSync(tmpFile.name);
+            await installMacOs();
         }
 
-        await exec.exec('ovm install ' + osVersion);
-        await exec.exec('ovm use ' + osVersion);
+        if (platform == 'win32') {
+            await exec.exec('ovm install ' + osVersion);
+            await exec.exec('ovm use ' + osVersion);
+        } else {
+            var commands = [];
+            commands.push('ovm install ' + osVersion);
+            commands.push('ovm use ' + osVersion); 
+            await execBash(commands);
+        }
 
         let output = '';
         const options = {};
@@ -8714,7 +8713,11 @@ async function run() {
                 }
             }
         };
-        await exec.exec('ovm', ['which', 'current'], options);
+        if (platform == 'win32') {
+            await exec.exec('ovm', ['which', 'current'], options);    
+        } else {
+            await execBash('ovm which current', options);
+        }
         let pathOscript = path.dirname(output);
 
         core.addPath(pathOscript);
@@ -8738,9 +8741,8 @@ async function run() {
     }
 }
 
-function installLinux() {
+async function installLinux() {
     var value = [];
-    value.push('#!/bin/bash');
     value.push('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF');
     value.push('echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/mono-official.list');
     value.push('sudo apt-get update');
@@ -8751,17 +8753,27 @@ function installLinux() {
     value.push("echo '" + cmd + "' | sudo tee /usr/local/bin/ovm");
 
     value.push('sudo chmod +x /usr/local/bin/ovm');
-    return value.join('\n');
+    await execBash(value);
 }
 
-function installMacOs() {
+async function installMacOs() {
     var value = [];
-    value.push('#!/bin/bash');
     value.push('mv ovm.exe /usr/local/bin/');
     let cmd = 'mono /usr/local/bin/ovm.exe "$@"';
     value.push("echo '" + cmd + "' | tee /usr/local/bin/ovm");
     value.push('sudo chmod +x /usr/local/bin/ovm');
-    return value.join('\n');
+    await execBash(value);
+}
+
+async function execBash(commands, options = {}) {
+    var script = Array.isArray(commands) ? [...commands] : [commands];
+    script.unshift('#!/bin/bash');
+    script = script.join('\n');
+    
+    var tmpFile = tmp.fileSync();
+    fs.writeFileSync(tmpFile.name, script);
+    await exec.exec('bash ' + tmpFile.name, [], options);
+    fs.unlinkSync(tmpFile.name);
 }
 
 run()

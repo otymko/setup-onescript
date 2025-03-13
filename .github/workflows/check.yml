@@ -20,5 +20,5 @@ jobs:
         ovm_version: ${{ matrix.ovm_version }}
     - name: Проверка скрипта OS
       run: oscript test/fixtures/test.os
-    - name: Проверка установки coverage
-      run: opm install coverage
+    - name: Проверка установки reflector
+      run: opm install reflector
