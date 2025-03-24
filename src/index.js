@@ -3,9 +3,17 @@ const exec = require('@actions/exec');
 const fs = require('fs');
 const tmp = require('tmp');
 const path = require('path');
-const io = require('@actions/io');
 
 const platform = process.platform;
+
+async function execCommand(command, args, options = {}) {
+    if (platform === 'darwin') {
+        const joinedArgs = args.map(a => `'${a}'`).join(' ');
+        await exec.exec('bash', ['-c', `${command} ${joinedArgs}`], options);
+    } else {
+        await exec.exec(command, args, options);
+    }
+}
 
 async function run() {
     try {
@@ -41,7 +49,6 @@ async function run() {
         }
 
         if (platform == 'linux') {
-
             var tmpFile = tmp.fileSync();
             fs.writeFileSync(tmpFile.name, installLinux());
             await exec.exec('bash ' + tmpFile.name);
@@ -56,8 +63,8 @@ async function run() {
             fs.unlinkSync(tmpFile.name);
         }
 
-        await exec.exec('ovm install ' + osVersion);
-        await exec.exec('ovm use ' + osVersion);
+        await execCommand('ovm', ['install', osVersion]);
+        await execCommand('ovm', ['use', osVersion]);
 
         let output = '';
         const options = {};
@@ -68,7 +75,7 @@ async function run() {
                 }
             }
         };
-        await exec.exec('ovm', ['which', 'current'], options);
+        await execCommand('ovm', ['which', 'current'], options);
         let pathOscript = path.dirname(output);
 
         core.addPath(pathOscript);
