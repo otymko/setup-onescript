@@ -57,7 +57,8 @@ async function run() {
         }
 
         // await exec.exec('ovm install ' + osVersion);
-        await exec.exec('ovm install ' + osVersion, [], {
+        await exec.exec('bash', ['-c', `ovm install ${osVersion}`], {
+        // await exec.exec('ovm install ' + osVersion, [], {
             listeners: {
                 stdout: (data) => console.log(data.toString()),
                 stderr: (data) => console.error('ERR:', data.toString())
