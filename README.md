@@ -10,9 +10,9 @@ Setup-Onescript позволяет использовать в действия�
 
 ```yaml
 - uses: actions/checkout@v2
-- uses: otymko/setup-onescript@v1
+- uses: otymko/setup-onescript@v1.5
   with:
-    version: 1.3.0 # Требуемая версия OneScript
+    version: 1.9.2 # Требуемая версия OneScript
 - run: oscript /path/to/script/test.os
 ```
 
@@ -20,6 +20,7 @@ Setup-Onescript позволяет использовать в действия�
 * 1.0.21
 * 1.2.0
 * 1.3.0
+* 1.9.2
 * lts (версия длительного сопровождения)
 * stable (последняя выпущенная версия)
 * dev (текущая ночная сборка)
@@ -45,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        oscript_version: [1.2.0, 1.3.0, dev]
+        oscript_version: [1.2.0, 1.3.0, 1.9.2, dev]
     name: Тестирование проекта
     steps:
       - uses: actions/checkout@v2
