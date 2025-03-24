@@ -9,12 +9,11 @@ jobs:
       fail-fast: false
       matrix:
         oscript_version: [lts, stable, dev]
-        os: [macOS-latest] # [macOS-latest, ubuntu-latest, windows-latest]
-        ovm_version: [latest] # ['1.2.1', latest]
+        os: [macOS-latest, ubuntu-latest, windows-latest]
+        ovm_version: ['1.2.1', latest]
     name: check oscript
     steps:
     - uses: actions/checkout@v4
-    - run: mono --version
     - uses: ./
       with:
         version: ${{ matrix.oscript_version }}
