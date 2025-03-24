@@ -56,7 +56,13 @@ async function run() {
             fs.unlinkSync(tmpFile.name);
         }
 
-        await exec.exec('ovm install ' + osVersion);
+        // await exec.exec('ovm install ' + osVersion);
+        await exec.exec('ovm install ' + osVersion, [], {
+            listeners: {
+                stdout: (data) => console.log(data.toString()),
+                stderr: (data) => console.error('ERR:', data.toString())
+            }
+        });
         await exec.exec('ovm use ' + osVersion);
 
         let output = '';
