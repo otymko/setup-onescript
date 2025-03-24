@@ -7,6 +7,15 @@ const io = require('@actions/io');
 
 const platform = process.platform;
 
+async function execOVM(args, options = {}) {
+    if (platform === 'darwin') {
+        const joinedArgs = args.map(a => `'${a}'`).join(' ');
+        await exec.exec('bash', ['-c', `ovm ${joinedArgs}`], options);
+    } else {
+        await exec.exec('ovm', args, options);
+    }
+}
+
 async function run() {
     try {
 
@@ -56,15 +65,8 @@ async function run() {
             fs.unlinkSync(tmpFile.name);
         }
 
-        // await exec.exec('ovm install ' + osVersion);
-        await exec.exec('bash', ['-c', `ovm install ${osVersion}`], {
-        // await exec.exec('ovm install ' + osVersion, [], {
-            listeners: {
-                stdout: (data) => console.log(data.toString()),
-                stderr: (data) => console.error('ERR:', data.toString())
-            }
-        });
-        await exec.exec('ovm use ' + osVersion);
+        await execOVM(['install', osVersion]);
+        await execOVM(['use', osVersion]);
 
         let output = '';
         const options = {};
@@ -75,7 +77,7 @@ async function run() {
                 }
             }
         };
-        await exec.exec('ovm', ['which', 'current'], options);
+        await execOVM(['which', 'current'], options);
         let pathOscript = path.dirname(output);
 
         core.addPath(pathOscript);
