@@ -66,17 +66,18 @@ async function run() {
         await execCommand('ovm', ['install', osVersion]);
         await execCommand('ovm', ['use', osVersion]);
 
-        let output = '';
+        let pathOscript = '';
         const options = {};
         options.listeners = {
             stdout: (data) => {
-                if (data.toString().includes('ovm')) {
-                    output += data.toString();
+                let output = data.toString().trim();
+                let fileName = path.parse(output).name;
+                if (fileName == 'oscript' && fs.existsSync(output)) {
+                    pathOscript = path.dirname(output);
                 }
             }
         };
         await execCommand('ovm', ['which', 'current'], options);
-        let pathOscript = path.dirname(output);
 
         core.addPath(pathOscript);
 
