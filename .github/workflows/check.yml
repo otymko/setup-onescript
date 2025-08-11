@@ -9,8 +9,8 @@ jobs:
       fail-fast: false
       matrix:
         oscript_version: [lts, stable, dev]
-        os: [macOS-latest, ubuntu-latest, windows-latest]
-        ovm_version: ['1.2.1', latest]
+        os: [macOS-latest, macos-14, ubuntu-latest, windows-latest]
+        ovm_version: [latest]
     name: check oscript
     steps:
     - uses: actions/checkout@v4

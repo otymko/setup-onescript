@@ -119,6 +119,7 @@ function installLinux() {
 function installMacOs() {
     var value = [];
     value.push('#!/bin/bash');
+    value.push('command -v mono >/dev/null 2>&1 || brew install mono');
     value.push('mv ovm.exe /usr/local/bin/');
     let cmd = 'mono /usr/local/bin/ovm.exe "$@"';
     value.push("echo '" + cmd + "' | tee /usr/local/bin/ovm");
