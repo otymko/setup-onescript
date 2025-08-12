@@ -10,7 +10,7 @@ Setup-Onescript позволяет использовать в действия�
 
 ```yaml
 - uses: actions/checkout@v2
-- uses: otymko/setup-onescript@v1.5
+- uses: otymko/setup-onescript@v1.5.1
   with:
     version: 1.9.2 # Требуемая версия OneScript
 - run: oscript /path/to/script/test.os
